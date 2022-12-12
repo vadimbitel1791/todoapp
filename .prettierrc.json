@@ -1,0 +1,19 @@
+{
+	"useTabs": false,
+	"printWidth": 100,
+	"tabWidth": 4,
+	"singleQuote": true,
+	"trailingComma": "es5",
+	"jsxBracketSameLine": false,
+	"jsxSingleQuote": false,
+	"endOfLine": "auto",
+	"arrowParens": "avoid",
+	"overrides": [
+		{
+			"files": "*.css,*.scss",
+			"options": {
+				"parser": "css"
+			}
+		}
+	]
+}
