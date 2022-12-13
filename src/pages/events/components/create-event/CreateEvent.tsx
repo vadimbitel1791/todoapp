@@ -1,13 +1,29 @@
-import { Col, Row, Card, Button, Form, TimePicker, DatePicker, Input, Modal } from 'antd';
+import {
+    Col,
+    Row,
+    Card,
+    Button,
+    Form,
+    TimePicker,
+    DatePicker,
+    Input,
+    Modal,
+    Select,
+    Typography,
+} from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { createEventEV, toggleCreateEventModal } from '../../../../store/events/events';
 import { useStore } from 'effector-react';
 import { $eventsStore } from '../../../../store/events';
+import { $peopleStore } from '../../../../store/people';
+import { useMemo } from 'react';
 
 export const CreateEvent = () => {
     const form = useForm();
     const { createModalVisible } = useStore($eventsStore);
+    const { list: people } = useStore($peopleStore);
+
     const dateFormat = 'DD.MM.YYYY';
     const timeFormat = 'HH:mm';
 
@@ -16,17 +32,31 @@ export const CreateEvent = () => {
         const timeFrom = `${dayjs(values.time[0]).format(timeFormat)}`;
         const timeTo = `${dayjs(values.time[1]).format(timeFormat)}`;
         const time = `${timeFrom}-${timeTo}`;
-
-        createEventEV({
+        const payload = {
             ...values,
             date,
             time,
-        });
+        };
+
+        createEventEV(payload);
+
+        console.log(payload);
+
+        form.reset();
     };
+
+    const peopleOptions = useMemo(
+        () =>
+            people.map((user: any) => ({
+                label: `${user.firstname} ${user.lastname}`,
+                value: `${user.firstname} ${user.lastname}`,
+            })),
+        []
+    );
 
     return (
         <Modal
-            title="Create event"
+            title={<Typography.Title level={2}>Create event</Typography.Title>}
             centered
             open={createModalVisible}
             onCancel={() => toggleCreateEventModal(false)}
@@ -34,94 +64,115 @@ export const CreateEvent = () => {
             footer={null}
         >
             <form onSubmit={form.handleSubmit(handleSubmit)}>
-                <Row gutter={25}>
-                    <Col lg={16}>
-                        <Card>
-                            <Form.Item>
-                                <label htmlFor="">Title</label>
-                                <Controller
-                                    control={form.control}
-                                    name="title"
-                                    render={props => (
-                                        <Input
-                                            onChange={props.field.onChange}
-                                            value={props.field.value}
-                                        />
-                                    )}
-                                />
-                            </Form.Item>
-                            <Form.Item>
-                                <label htmlFor="">Description</label>
-                                <Controller
-                                    control={form.control}
-                                    name="description"
-                                    render={props => (
-                                        <Input
-                                            onChange={props.field.onChange}
-                                            value={props.field.value}
-                                        />
-                                    )}
-                                />
-                            </Form.Item>
-                            <Form.Item>
-                                <Row gutter={25}>
-                                    <Col>
-                                        <div>
-                                            <label htmlFor="">Date</label>
-                                        </div>
-                                        <Controller
-                                            control={form.control}
-                                            name="date"
-                                            render={props => (
-                                                <DatePicker
-                                                    format={dateFormat}
-                                                    onChange={props.field.onChange}
-                                                    value={props.field.value}
-                                                />
-                                            )}
-                                        />
-                                    </Col>
-                                    <Col>
-                                        <div>
-                                            <label htmlFor="">Time</label>
-                                        </div>
-                                        <Controller
-                                            control={form.control}
-                                            name="time"
-                                            render={props => (
-                                                <TimePicker.RangePicker
-                                                    format={timeFormat}
-                                                    onChange={props.field.onChange}
-                                                    value={props.field.value}
-                                                />
-                                            )}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Form.Item>
-                            <Form.Item>
-                                <label htmlFor="">Location</label>
-                                <Controller
-                                    control={form.control}
-                                    name="location"
-                                    render={props => (
-                                        <Input
-                                            onChange={props.field.onChange}
-                                            value={props.field.value}
-                                        />
-                                    )}
-                                />
-                            </Form.Item>
-                        </Card>
-                    </Col>
-                    <Col lg={8}>
-                        <Card>
-                            <Button type="primary" htmlType="submit">
-                                Create
-                            </Button>
-                        </Card>
-                    </Col>
-                </Row>
+                <Form.Item>
+                    <Row gutter={25}>
+                        <Col lg={16}>
+                            <Card>
+                                <Form.Item>
+                                    <label htmlFor="">Title</label>
+                                    <Controller
+                                        control={form.control}
+                                        name="title"
+                                        render={props => (
+                                            <Input
+                                                onChange={props.field.onChange}
+                                                value={props.field.value}
+                                            />
+                                        )}
+                                    />
+                                </Form.Item>
+                                <Form.Item>
+                                    <label htmlFor="">Description</label>
+                                    <Controller
+                                        control={form.control}
+                                        name="description"
+                                        render={props => (
+                                            <Input
+                                                onChange={props.field.onChange}
+                                                value={props.field.value}
+                                            />
+                                        )}
+                                    />
+                                </Form.Item>
+                                <Form.Item>
+                                    <Row gutter={25}>
+                                        <Col>
+                                            <div>
+                                                <label htmlFor="">Date</label>
+                                            </div>
+                                            <Controller
+                                                control={form.control}
+                                                name="date"
+                                                render={props => (
+                                                    <DatePicker
+                                                        format={dateFormat}
+                                                        onChange={props.field.onChange}
+                                                        value={props.field.value}
+                                                    />
+                                                )}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <div>
+                                                <label htmlFor="">Time</label>
+                                            </div>
+                                            <Controller
+                                                control={form.control}
+                                                name="time"
+                                                render={props => (
+                                                    <TimePicker.RangePicker
+                                                        format={timeFormat}
+                                                        onChange={props.field.onChange}
+                                                        value={props.field.value}
+                                                    />
+                                                )}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Form.Item>
+                                <Form.Item>
+                                    <label htmlFor="">Location</label>
+                                    <Controller
+                                        control={form.control}
+                                        name="location"
+                                        render={props => (
+                                            <Input
+                                                onChange={props.field.onChange}
+                                                value={props.field.value}
+                                            />
+                                        )}
+                                    />
+                                </Form.Item>
+                            </Card>
+                        </Col>
+                        <Col lg={8}>
+                            <Card>
+                                <Form.Item>
+                                    <label htmlFor="">People</label>
+                                    <Controller
+                                        control={form.control}
+                                        name="people"
+                                        render={props => (
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                style={{ width: '100%' }}
+                                                placeholder="Please select"
+                                                onChange={props.field.onChange}
+                                                options={peopleOptions}
+                                            />
+                                        )}
+                                    />
+                                </Form.Item>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" size="large" htmlType="submit">
+                        Create
+                    </Button>
+                </Form.Item>
             </form>
         </Modal>
     );
