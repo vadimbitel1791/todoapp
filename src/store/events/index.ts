@@ -1,5 +1,6 @@
 import { createStore } from 'effector';
-import { createEventEV, toggleCreateEventModal } from './events';
+import { createEventFX, fetchEventsFX } from './effects';
+import { toggleCreateEventModal } from './events';
 
 const initialState = {
     createModalVisible: false,
@@ -9,12 +10,16 @@ const initialState = {
 export const $eventsStore = createStore<any>(initialState);
 
 $eventsStore
-    .on(createEventEV, (state, payload) => ({
-        ...state,
-        list: [...state.list, payload],
-        createModalVisible: false,
-    }))
     .on(toggleCreateEventModal, (state, payload) => ({
         ...state,
         createModalVisible: payload,
+    }))
+    .on(fetchEventsFX.doneData, (state, payload) => ({
+        ...state,
+        list: payload,
+    }))
+    .on(createEventFX.doneData, (state, payload) => ({
+        ...state,
+        list: [...state.list, payload],
+        createModalVisible: false,
     }));

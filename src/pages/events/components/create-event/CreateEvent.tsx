@@ -18,11 +18,13 @@ import { useStore } from 'effector-react';
 import { $eventsStore } from '../../../../store/events';
 import { $peopleStore } from '../../../../store/people';
 import { useMemo } from 'react';
+import { $groupStore } from '../../../../store/groups';
 
 export const CreateEvent = () => {
     const form = useForm();
     const { createModalVisible } = useStore($eventsStore);
     const { list: people } = useStore($peopleStore);
+    const { list: groups } = useStore($groupStore);
 
     const dateFormat = 'DD.MM.YYYY';
     const timeFormat = 'HH:mm';
@@ -36,11 +38,12 @@ export const CreateEvent = () => {
             ...values,
             date,
             time,
+            tags: '',
+            people: '',
+            groups: '',
         };
 
         createEventEV(payload);
-
-        console.log(payload);
 
         form.reset();
     };
@@ -50,6 +53,15 @@ export const CreateEvent = () => {
             people.map((user: any) => ({
                 label: `${user.firstname} ${user.lastname}`,
                 value: `${user.firstname} ${user.lastname}`,
+            })),
+        []
+    );
+
+    const groupsOptions = useMemo(
+        () =>
+            groups.map((group: any) => ({
+                label: group,
+                value: group,
             })),
         []
     );
@@ -146,8 +158,8 @@ export const CreateEvent = () => {
                             </Card>
                         </Col>
                         <Col lg={8}>
-                            <Card>
-                                <Form.Item>
+                            <Form.Item>
+                                <Card>
                                     <label htmlFor="">People</label>
                                     <Controller
                                         control={form.control}
@@ -163,8 +175,47 @@ export const CreateEvent = () => {
                                             />
                                         )}
                                     />
-                                </Form.Item>
-                            </Card>
+                                </Card>
+                            </Form.Item>
+                            <Form.Item>
+                                <Card>
+                                    <label htmlFor="">Groups</label>
+                                    <Controller
+                                        control={form.control}
+                                        name="groups"
+                                        render={props => (
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                style={{ width: '100%' }}
+                                                placeholder="Please select"
+                                                onChange={props.field.onChange}
+                                                options={groupsOptions}
+                                            />
+                                        )}
+                                    />
+                                </Card>
+                            </Form.Item>
+                            <Form.Item>
+                                <Card>
+                                    <Form.Item>
+                                        <label htmlFor="">Tags</label>
+                                        <Controller
+                                            control={form.control}
+                                            name="tags"
+                                            render={props => (
+                                                <Select
+                                                    mode="tags"
+                                                    allowClear
+                                                    style={{ width: '100%' }}
+                                                    placeholder="Please select"
+                                                    onChange={props.field.onChange}
+                                                />
+                                            )}
+                                        />
+                                    </Form.Item>
+                                </Card>
+                            </Form.Item>
                         </Col>
                     </Row>
                 </Form.Item>

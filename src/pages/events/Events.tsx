@@ -2,11 +2,16 @@ import { useStore } from 'effector-react';
 import { Typography, Button, List, Badge } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { $eventsStore } from '../../store/events';
-import { toggleCreateEventModal } from '../../store/events/events';
+import { fetchEventsEV, toggleCreateEventModal } from '../../store/events/events';
 import { CreateEvent } from './components/create-event/CreateEvent';
+import { useEffect } from 'react';
 
 export const Events = () => {
     const { list } = useStore($eventsStore);
+
+    useEffect(() => {
+        fetchEventsEV();
+    }, []);
 
     const handleButtonClick = () => toggleCreateEventModal(true);
 

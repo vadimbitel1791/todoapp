@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Typography } from 'antd';
+import { Button, Form, Input, Modal, Select, Typography } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import { useStore } from 'effector-react';
 import { createPeopleEV, toggleCreatePeopleModalEV } from '../../../../store/people/events';
@@ -39,6 +39,42 @@ export const CreatePeople = () => {
                         name="lastname"
                         render={props => (
                             <Input onChange={props.field.onChange} value={props.field.value} />
+                        )}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <label htmlFor="">Email</label>
+                    <Controller
+                        control={form.control}
+                        name="email"
+                        render={props => (
+                            <Input onChange={props.field.onChange} value={props.field.value} />
+                        )}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <label htmlFor="">Phone</label>
+                    <Controller
+                        control={form.control}
+                        name="phone"
+                        render={props => (
+                            <Input onChange={props.field.onChange} value={props.field.value} />
+                        )}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <label htmlFor="">Tags</label>
+                    <Controller
+                        control={form.control}
+                        name="tags"
+                        render={props => (
+                            <Select
+                                mode="tags"
+                                allowClear
+                                style={{ width: '100%' }}
+                                placeholder="Please select"
+                                onChange={props.field.onChange}
+                            />
                         )}
                     />
                 </Form.Item>
